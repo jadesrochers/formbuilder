@@ -37,33 +37,39 @@ describe('formbuilder tests', () => {
 
   // Fix this test when Async act() comes out and allows
   // useEffect to work
-  test('Test useSelecor with async (NOT YET WORKING)', async () => {
-    function dataProm(){
+  test('Test useSelecor with async', async () => {
+    let dataProm = () => {
       return new Promise((resolve, reject) => {
       resolve([1,2,3,4,5]);
      })
     }
     let testfn = jest.fn(() => [1,2,3,4])
     let wrapper 
-    /* act(() => { */
-      /* wrapper = mount( */
-      /*   <HookWrapper */ 
-          /* hook={() => useSelector(testfn,'test1',4)} */   
-        /* > */
-        /* </HookWrapper> */
-      /* ) */ 
-    /* }) */
+    await act( async () => {
+      wrapper = mount(
+        <HookWrapper 
+          hook={() => useSelector(testfn,'test1',4)}   
+        >
+        </HookWrapper>
+      ) 
+    })
 
-    /* let hook = wrapper.find('div').props().hook; */
-    /* expect(hook.opts).toEqual(undefined) */
-    /* expect(hook.current).toEqual(4) */
+    wrapper.update()
+    let hook = wrapper.find('div').props().hook;
+    expect(hook.opts).toEqual([1,2,3,4])
 
-    /* wrapper.update() */
-    /* wrapper.update() */
-    // Will need to revisit when 16.9 comes out and use 
-    // the async version of act
-    /* expect(hook.opts).toEqual(undefined) */
-    /* expect(hook.current).toEqual(4) */
+    await act( async () => {
+      wrapper = mount(
+        <HookWrapper 
+          hook={() => useSelector(dataProm,'test2',4)}   
+        >
+        </HookWrapper>
+      ) 
+    })
+
+    wrapper.update()
+    hook = wrapper.find('div').props().hook;
+    expect(hook.opts).toEqual([1,2,3,4,5])
   });
 })
 
@@ -108,26 +114,26 @@ describe('Selector tests', () => {
     expect(wrapper.text()).toEqual('123')
   });
 
-  test('Create and Change an updateselector', () => {
+  test('Create and Change an updateselector', async () => {
     // Update when act() async support added, 16.9 goal for react team.
     let formset = jest.fn()
     let dataget = jest.fn()
     dataget.mockReturnValueOnce([1,2,3])
-    /* let wrapper = mount(<UpdateSelector */ 
-    /*   dataget={dataget} defaultval={0} */
-    /*   varname="test1" formset={formset} */
-    /*   formvals={{month: 1, year: 2001}} */
-    /*   changeon={['year', 'month']} */
-    /*   />) */ 
-    /* expect(wrapper.find('select').props().value).toEqual(0) */
-    /* let onChange = wrapper.find('select').props().onChange */
-    // Wont work until act() has async support.
-    /* act(() => { */
-    /*   onChange({target: {value: 3}}) */
-    /* }) */
-    /* wrapper.update() */
-    /* expect(wrapper.find('select').props().value).toEqual(3) */
-    /* expect(wrapper.text()).toEqual('123') */
+    let wrapper = mount(<UpdateSelector
+       dataget={dataget} defaultval={0}
+       varname="test1" formset={formset}
+       formvals={{month: 1, year: 2001}}
+       changeon={['year', 'month']}
+       />)
+     expect(wrapper.find('select').props().value).toEqual(0)
+     let onChange = wrapper.find('select').props().onChange
+
+     await act( async () => {
+       onChange({target: {value: 3}})
+     })
+     wrapper.update()
+     expect(wrapper.find('select').props().value).toEqual(3)
+     expect(wrapper.text()).toEqual('123')
   });
 
 

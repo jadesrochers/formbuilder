@@ -1,5 +1,5 @@
 {
-    "name": "@jadesrochers/renamethis",
+    "name": "@jadesrochers/formbuilder",
     "version": "0.1.1",
     "license": "MIT",
     "author": "Jared Desrochers",
@@ -8,9 +8,9 @@
     "module": "build/esm.js",
     "repository": {
         "type": "git",
-        "url": "https://github.com/jadesrochers/renamethis.git"
+        "url": "https://github.com/jadesrochers/formbuilder.git"
     },
-    "description": "Describe what the component library does",
+    "description": "Components to set up selection forms with selector updates",
     "keywords": [
         "react"
     ],
@@ -38,8 +38,8 @@
         "eslint-config-problems": "^3.0.1",
         "jest": "^24.9.0",
         "jest-emotion": "^10.0.11",
-        "react": "^16.8.6",
-        "react-dom": "^16.8.6",
+        "react": "^16.11.0",
+        "react-dom": "^16.11.0",
         "rollup": "^1.25.2",
         "rollup-plugin-babel": "^4.3.3",
         "rollup-plugin-commonjs": "^10.1.0",
