@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { jsx, css } from '@emotion/core'
 import * as R from 'ramda';
-import fps from '@jadesrochers/fpstreamline';
+import * as fps from '@jadesrochers/fpstreamline';
 
 var handleChange = R.curry((name, childsetter, formsetter, changed) => {
   const value = changed.target.value;
