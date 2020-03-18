@@ -3,12 +3,18 @@
     "version": "0.2.0",
     "license": "MIT",
     "author": "Jared Desrochers",
-    "main": "build/cjs.js",
-    "module": "build/esm.js",
+    "module": "es/index.js",
+    "main": "dist/formbuilder-umd.js",
     "repository": {
         "type": "git",
         "url": "https://github.com/jadesrochers/formbuilder.git"
     },
+    "files": [
+        "es/",
+        "dist/",
+        "README.md",
+        "LICENSE"
+    ],
     "description": "Components to set up selection forms with selector updates",
     "keywords": [
         "react",
@@ -17,43 +23,46 @@
         "selection"
     ],
     "dependencies": {
-        "@babel/runtime": "^7.7.7",
-        "@emotion/core": "^10.0.27",
-        "@jadesrochers/fpstreamline": "^0.1.5",
-        "@jadesrochers/reacthelpers": "^0.1.15",
-        "ramda": "^0.26.1"
+        "@babel/runtime": "^7.8.7",
+        "@emotion/core": "^10.0.28",
+        "@jadesrochers/fpstreamline": "^0.1.7",
+        "@jadesrochers/reacthelpers": "^0.1.19",
+        "ramda": "^0.27.0"
     },
     "peerdependencies": {
         "react": "^16.8.0",
         "react-dom": "^16.8.0"
     },
     "scripts": {
-        "test": "jest",
-        "build": "rollup -c",
-        "packagePatch": "npm run test && npm run build && npm version patch && npm publish && git push -u origin master",
-        "packageMinor": "npm run test && npm run build && npm version patch && npm publish && git push -u origin master",
+        "test": "BABEL_ENV=jest jest",
+        "build-es": "BABEL_ENV=es6 babel --out-dir es --ignore '**/__tests__/','**/enzyme.js'  src",
+        "build-umd-roll": "BABEL_ENV=umd rollup --config ./rollup.config.js",
+        "packagePatch": "npm run test && npm run build-es && npm run build-umd-roll && npm version patch && npm publish && git push -u origin master",
+        "packageMinor": "npm run test && npm run build-es && npm run build-umd-roll && npm version minor && npm publish && git push -u origin master",
         "CommitandPackage": "./CommitandPackage.sh"
     },
     "devDependencies": {
-        "@babel/core": "^7.7.7",
-        "@babel/plugin-transform-runtime": "^7.7.6",
-        "@babel/preset-env": "^7.7.7",
-        "@babel/preset-react": "^7.7.4",
+        "@babel/cli": "^7.8.4",
+        "@babel/core": "^7.8.7",
+        "@babel/plugin-transform-runtime": "^7.8.3",
+        "@babel/preset-env": "^7.8.7",
+        "@babel/preset-react": "^7.8.3",
         "babel-loader": "^8.0.6",
         "enzyme": "^3.11.0",
         "enzyme-adapter-react-16": "^1.15.2",
         "eslint": "^6.8.0",
-        "eslint-config-problems": "^3.1.0",
-        "eslint-plugin-react": "^7.17.0",
-        "eslint-plugin-react-hooks": "^2.3.0",
+        "eslint-config-problems": "^4.0.0",
+        "eslint-plugin-react": "^7.19.0",
+        "eslint-plugin-react-hooks": "^2.5.0",
         "jest": "^24.9.0",
-        "jest-emotion": "^10.0.27",
-        "react": "^16.12.0",
-        "react-dom": "^16.12.0",
-        "rollup": "^1.28.0",
-        "rollup-plugin-babel": "^4.3.3",
+        "jest-emotion": "^10.0.32",
+        "react": "^16.13.0",
+        "react-dom": "^16.13.0",
+        "rollup": "^2.0.6",
+        "rollup-plugin-babel": "^4.4.0",
         "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-filesize": "^6.2.1",
-        "rollup-plugin-node-resolve": "^5.2.0"
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "rollup-plugin-terser": "^5.3.0"
     }
 }

@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { jsx, css } from '@emotion/core'
 import * as R from 'ramda';
 import * as fps from '@jadesrochers/fpstreamline';
@@ -130,7 +130,9 @@ const Selector = (props) => {
 
 const RegSelector = (props) => {
  const { opts, current, setcurrent } = useSelector(props.dataget, props.defaultval) 
- useMemo(() => props.formset(props.varname, (opts ? current : undefined)), [opts])
+ // Changed to useEffect to make React 6.13 happy regarding not updating
+ // other components in fucntion body (with props.formset) except in useEffect
+ useEffect(() => props.formset(props.varname, (opts ? current : undefined)), [opts])
  useMemo(() => setcurrent(props.defaultval), [props.defaultval])
  return(
 
