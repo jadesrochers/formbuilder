@@ -132,7 +132,6 @@ const Selector = (props) => {
 }
 
 const RegSelector = (props) => {
-console.log('regselector props: ',props)
  const { opts, current, setcurrent } = useSelector(props.dataget, props.defaults[props.varname]) 
  // Changed to useEffect to make React 6.13 happy regarding not updating
  // other components in fucntion body (with props.formset) except in useEffect
@@ -148,10 +147,8 @@ console.log('regselector props: ',props)
 // Requires a getter function (dataget) to populate the options list, 
 // the state variable tracking the form values (formvals)
 const UpdateSelector = (props) => {
-console.log('updateselector props: ',props)
  const { opts, current, setcurrent } = useUpdateSelector(props.dataget, props.formvals, R.map((name) => props.formvals[name])(props.changeon), props.defaults[props.varname])
 
- console.log('updateselector opts, current, formvals: ', opts, current, props.formvals)
  useMemo(() => { setcurrent(opts ? opts[0] : props.formvals[props.varname]) }, [opts])
  useEffect(() => props.formset(props.varname, (opts ? current : props.formvals[props.varname])), [opts])
  // when the options for the selector change, grab the first
@@ -170,7 +167,7 @@ const NestedSelector = (props) => {
  const { opts, current, setcurrent } = useUpdateSelector(props.dataget, props.formvals, R.map((name) => props.formvals[name])(props.changeon))
  /* console.log('NestedSelector current: ', current) */
  // If options exist, set the current
- console.log('nestedselector opts, current, formvals: ', opts, current, props.formvals)
+ /* console.log('nestedselector opts, current, formvals: ', opts, current, props.formvals) */
  useMemo(() => setcurrent(opts ? opts[0] : props.formvals[props.varname]), [opts])
  useEffect(() => props.formset(props.varname, (opts ? current : props.formvals[props.varname])), [opts])
  /* useMemo(() => setcurrent(props.defaultval), [props.defaultval]) */
@@ -192,10 +189,8 @@ const NestedSelector = (props) => {
 // Need TO DO: have Form set all the defaults itself to avoid unset 
 // value problems
 const Form = (props) => {
-  console.log('Form props: ',props)
   const { values, setname, setValues } = useAddFormValue()
   const pass = {formset: setname, formvals: values, defaults: props.defaults}
-  console.log('Form pass: ', pass)
   const propsToChildren = R.map(child => {
     return React.cloneElement(child, { ...pass, key: child.props.varname})
   })(fps.toArray(props.children))
