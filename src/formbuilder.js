@@ -149,6 +149,7 @@ const RegSelector = (props) => {
 const UpdateSelector = (props) => {
  const { opts, current, setcurrent } = useUpdateSelector(props.dataget, props.formvals, R.map((name) => props.formvals[name])(props.changeon))
 
+ console.log('updateselector opts, current, formvals: ', opts, current, props.formvals)
  useMemo(() => { setcurrent(opts ? opts[0] : current) }, [opts])
  useEffect(() => props.formset(props.varname, (opts ? current : current)), [opts])
  // when the options for the selector change, grab the first
@@ -167,6 +168,7 @@ const NestedSelector = (props) => {
  const { opts, current, setcurrent } = useUpdateSelector(props.dataget, props.formvals, R.map((name) => props.formvals[name])(props.changeon))
  /* console.log('NestedSelector current: ', current) */
  // If options exist, set the current
+ console.log('nestedselector opts, current, formvals: ', opts, current, props.formvals)
  useMemo(() => setcurrent(opts ? opts[0] : current), [opts])
  useEffect(() => props.formset(props.varname, (opts ? current : current)), [opts])
  /* useMemo(() => setcurrent(props.defaultval), [props.defaultval]) */
