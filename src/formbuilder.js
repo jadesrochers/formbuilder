@@ -14,8 +14,8 @@ var handleChange = R.curry((name, childsetter, formsetter, changed) => {
 // This one only runs the useEffect once; good for static list of 
 // options or making request for single set that will not change.
 const useSelector = (dataget, defaultval) => {
-  const [opts, setopts] = useState(undefined)
-  const [current, setcurrent] = useState(undefined)
+  const [opts, setopts] = useState(defaultval)
+  const [current, setcurrent] = useState(defaultval)
   React.useEffect(()=> {
   let datagetter
     if(typeof dataget === "function"){
@@ -33,9 +33,9 @@ const useSelector = (dataget, defaultval) => {
 
 // If you need to pass static values, don't use this one.
 // Updates the options based on other values in the form
-const useUpdateSelector = ( dataget, formvals, updatearr ) => {
-  const [opts, setopts] = useState(undefined)
-  const [current, setcurrent] = useState(undefined)
+const useUpdateSelector = ( dataget, formvals, updatearr, defaultval ) => {
+  const [opts, setopts] = useState(defaultval)
+  const [current, setcurrent] = useState(defaultval)
   const datawrap = () => dataget(formvals)
   React.useEffect(()=> {
     let datagetter
@@ -132,7 +132,8 @@ const Selector = (props) => {
 }
 
 const RegSelector = (props) => {
- const { opts, current, setcurrent } = useSelector(props.dataget, props.defaultval) 
+console.log('regselector props: ',props)
+ const { opts, current, setcurrent } = useSelector(props.dataget, props.defaults[props.varname]) 
  // Changed to useEffect to make React 6.13 happy regarding not updating
  // other components in fucntion body (with props.formset) except in useEffect
  useEffect(() => props.formset(props.varname, (opts ? current : props.formvals[props.varname])), [opts])
@@ -147,7 +148,8 @@ const RegSelector = (props) => {
 // Requires a getter function (dataget) to populate the options list, 
 // the state variable tracking the form values (formvals)
 const UpdateSelector = (props) => {
- const { opts, current, setcurrent } = useUpdateSelector(props.dataget, props.formvals, R.map((name) => props.formvals[name])(props.changeon))
+console.log('updateselector props: ',props)
+ const { opts, current, setcurrent } = useUpdateSelector(props.dataget, props.formvals, R.map((name) => props.formvals[name])(props.changeon), props.defaults[props.varname])
 
  console.log('updateselector opts, current, formvals: ', opts, current, props.formvals)
  useMemo(() => { setcurrent(opts ? opts[0] : props.formvals[props.varname]) }, [opts])
@@ -172,7 +174,7 @@ const NestedSelector = (props) => {
  useMemo(() => setcurrent(opts ? opts[0] : props.formvals[props.varname]), [opts])
  useEffect(() => props.formset(props.varname, (opts ? current : props.formvals[props.varname])), [opts])
  /* useMemo(() => setcurrent(props.defaultval), [props.defaultval]) */
- const pass = { formvals: props.formvals, formset: props.formset, update: current }
+ const pass = { formvals: props.formvals, formset: props.formset, update: current, defaults: props.defaults }
  const propsToChildren = R.map(child => {
     return React.cloneElement(child, { ...pass })
  })(fps.toArray(props.children))
@@ -190,11 +192,12 @@ const NestedSelector = (props) => {
 // Need TO DO: have Form set all the defaults itself to avoid unset 
 // value problems
 const Form = (props) => {
+  console.log('Form props: ',props)
   const { values, setname, setValues } = useAddFormValue()
+  const pass = {formset: setname, formvals: values, defaults: props.defaults}
+  console.log('Form pass: ', pass)
   const propsToChildren = R.map(child => {
-    return React.cloneElement(child,
-    {formset: setname, formvals: values, key: child.props.varname, defaults: props.defaults}
-    )
+    return React.cloneElement(child, { ...pass, key: child.props.varname})
   })(fps.toArray(props.children))
  
   if( R.isEmpty(values) ){

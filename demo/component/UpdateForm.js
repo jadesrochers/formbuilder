@@ -51,9 +51,9 @@ const UpdateSelectors = (props) => {
      <Form
        submitFormFcn = {formSubmit} defaults={{year: years[0], month, day }}
      >
-       <RegSelector dataget={() => years} varname='year' defaultval={years[0]} />
-       <NestedSelector dataget={getMonths} varname='month' defaultval={month} changeon={['year']} >
-         <UpdateSelector key={"nested1"} dataget={getDays} varname='day' defaultval={day} changeon={['year', 'month']} />
+       <RegSelector dataget={() => years} varname='year'  />
+       <NestedSelector dataget={getMonths} varname='month' changeon={['year']} >
+         <UpdateSelector key={"nested1"} dataget={getDays} varname='day' changeon={['year', 'month']} />
        </NestedSelector>
         
      </Form>
