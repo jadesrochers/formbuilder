@@ -4,10 +4,9 @@ import { jsx, css } from '@emotion/core'
 import * as R from 'ramda';
 import * as fps from '@jadesrochers/fpstreamline';
 
-var handleChange = R.curry((name, childsetter, formsetter, changed) => {
-  /* console.log('handle change: ', changed) */
+var handleChange = R.curry((name, formsetter, changed) => {
   const value = changed.target.value;
-  childsetter(value)
+  /* console.log('handle change: ', name, value) */
   formsetter(name, value)
 })
 
@@ -15,48 +14,63 @@ var handleChange = R.curry((name, childsetter, formsetter, changed) => {
 // options or making request for single set that will not change.
 const useSelector = (dataget, defaultval, formset, varname) => {
   const [opts, setopts] = useState(defaultval)
-  const [current, setcurrent] = useState(defaultval)
-  React.useEffect(()=> {
+  /* const [current, setcurrent] = useState(defaultval) */
+  useEffect(()=> {
   let datagetter
     if(typeof dataget === "function"){
       datagetter = async () => {
         const data = await dataget()
         setopts(data)
         formset(varname, data[0])
-        setcurrent(data[0])
+        /* setcurrent(data[0]) */
       }
     }else{
       datagetter = () => {
         setopts(dataget)
         formset(varname, dataget[0])
-        setcurrent(dataget[0])
+        /* setcurrent(dataget[0]) */
       }
     }
     datagetter()
-  }, [])
+  }, [defaultval])
 
-  return { opts, current, setcurrent }
+  return { opts }
 }
 
 // If you need to pass static values, don't use this one.
 // Updates the options based on other values in the form
 const useUpdateSelector = ( props ) => {
   const [opts, setopts] = useState(props.default)
-  const [current, setcurrent] = useState(props.default)
+  const [rencount, setrencount] = useState(0)
+  /* const [current, setcurrent] = useState(props.default) */
   const datawrap = () => props.dataget(props.formvals)
-  React.useEffect(()=> {
+  useEffect(()=> {
     const datagetter = async () => {
       const data = await datawrap()
+      /* console.log('data: ', data) */
+      // With multiple update selectors, need this to avoid
+      // invalid values
       if(data){
-        setcurrent(data[0])
-        props.formset(props.varname, data[0]) 
+        /* setcurrent(data[0]) */
+        if(rencount === 0){
+          props.formset(props.varname, props.default)
+          setrencount(1)
+        }else{
+          props.formset(props.varname, data[0]) 
+        }
         setopts(data)
       }
     }
     datagetter()
   }, props.updatearr )
+
+  useEffect(()=> {
+    return () => {  
+      props.formset(props.varname, props.default)
+    };
+  }, [])
   // The updatearr arg must be array, determines when the options are reset.
-  return { opts, current, setcurrent }
+  return { opts }
 }
 
 const useAddFormValue = () => {
@@ -125,12 +139,13 @@ const OptionList = (props) => {
 }
 
 const Selector = (props) => {
- let options = props.opts ? props.opts : ''
+ /* console.log('Selector name and formvals: ', props.formvals, props.varname) */
+ const options = props.opts ? props.opts : ''
  return(
    <select 
-    value = {props.current} 
+    value = {props.formvals[props.varname]} 
     key = {props.varname}
-    onChange = {(chg) => handleChange(props.varname, props.setcurrent, props.formset, chg)}
+    onChange = {(chg) => handleChange(props.varname, props.formset, chg)}
     css={[selectFilled,backgroundArrow,hoverColor,(props.cssStyles ? props.cssStyles : undefined)]}
     >
      <OptionList
@@ -143,13 +158,13 @@ const Selector = (props) => {
 }
 
 const RegSelector = (props) => {
- const { opts, current, setcurrent } = useSelector(props.dataget, props.defaults[props.varname], props.formset, props.varname) 
+ const { opts } = useSelector(props.dataget, props.defaults[props.varname], props.formset, props.varname) 
  // Changed to useEffect to make React 6.13 happy regarding not updating
  // other components in fucntion body (with props.formset) except in useEffect
- /* useEffect(() => props.formset(props.varname, (opts ? current : props.formvals[props.varname])), [opts]) */
+ useEffect(() => props.formset(props.varname, (props.defaults[props.varname])), [])
  /* useMemo(() => setcurrent(props.formvals[props.varname]), []) */
  return(
-   <Selector {...props}  opts={opts} setcurrent={setcurrent} current={current} />
+   <Selector {...props}  opts={opts} />
     )
 }
 
@@ -158,10 +173,10 @@ const RegSelector = (props) => {
 // the state variable tracking the form values (formvals)
 const UpdateSelector = (props) => {
   const updater = { ...props, updatearr: R.map((name) => props.formvals[name])(props.changeon), default: props.defaults[props.varname] } 
-  const { opts, current, setcurrent } = useUpdateSelector(updater)
+  const { opts, } = useUpdateSelector(updater)
 
   return(
-    <Selector {...props}  opts={opts} setcurrent={setcurrent} current={current} />
+    <Selector {...props} opts={opts} />
   )
 }
 
@@ -182,9 +197,10 @@ const NestedSelector = (props) => {
  return(
    <>
      <Selector {...props} opts={opts} setcurrent={setcurrent} current={current} />
-     { useMemo(() => propsToChildren, [props.formvals[props.varname]]) }
+     { propsToChildren }
    </>
  )
+     /* { useMemo(() => propsToChildren, R.values(R.pick(props.nestchange, props.formvals)) )} */
 }
 
 
