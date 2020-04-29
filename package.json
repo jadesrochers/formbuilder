@@ -1,6 +1,6 @@
 {
     "name": "@jadesrochers/formbuilder",
-    "version": "0.2.11",
+    "version": "0.2.12",
     "license": "MIT",
     "author": "Jared Desrochers",
     "module": "es/index.js",
