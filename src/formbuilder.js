@@ -193,7 +193,7 @@ const Form = (props) => {
   const { values, setname, setValues } = useAddFormValue()
   const propsToChildren = R.map(child => {
     return React.cloneElement(child,
-    {formset: setname, formvals: values, key: child.props.varname}
+    {formset: setname, formvals: values, key: child.props.varname, defaults: props.defaults}
     )
   })(fps.toArray(props.children))
  
