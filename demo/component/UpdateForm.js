@@ -29,13 +29,17 @@ const testData = {
 }
 
 const getMonths = (vals) => {
-  /* console.log('vals for getMonths: ', vals) */
-  return R.keys(testData[vals.year]) 
+  console.log('vals, testData for getMonths: ', vals, testData)
+  const rslt = R.keys(testData[vals.year])
+  console.log('Rslt:', rslt)
+  return rslt
 }
 
 const getDays = (vals) => {
-  /* console.log('vals for getDays: ', vals) */
-  return testData[vals.year][vals.month]
+  console.log('vals, testData for getDays: ', vals, testData)
+  const rslt = testData[vals.year][vals.month]
+  console.log('Rslt:', rslt)
+  return rslt
 }
 // Making a covid Form; I think select elements for year/mo/day are needed.
 // In order to populate those, I need to get all possible years, months, and days in a structure that allows changing the days based on the month and 
@@ -60,6 +64,39 @@ const UpdateSelectors = (props) => {
   )
 }
 
+const testData2 = {
+  2015: {
+    jan: [ 1,2,3,4 ],
+    feb: [ 7,8,9,10 ],
+    mar: [ 21,22,23,24 ],
+    apr: [ 10,11,15,20],
+    jul: [ 3, 7, 11, 19],
+    nov: [ 14,15,16,17],
+  },
+}
 
 
-export { UpdateSelectors };
+const UpdateSelectors2 = (props) => {
+  const datemap = testData2
+  const years = R.keys(datemap)
+  const month = R.keys(datemap[years[0]]).slice(-1)[0]
+  const day = datemap[years[0]][month][0]
+  console.log('year, month, day: ', years, month, day )
+  const formSubmit = handleFormSubmit(props.pathFcn)
+  return(
+     <Form
+       submitFormFcn = {formSubmit} defaults={{year: years[0], month, day }}
+     >
+       <RegSelector dataget={() => years} varname='year'  />
+       <NestedSelector dataget={getMonths} varname='month' changeon={['year']} >
+         <UpdateSelector key={"nested1"} dataget={getDays} varname='day' changeon={['year', 'month']} />
+       </NestedSelector>
+        
+     </Form>
+  )
+}
+
+
+
+
+export { UpdateSelectors, UpdateSelectors2 };

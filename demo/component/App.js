@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, Router } from '@reach/router';
-import { UpdateSelectors } from "./UpdateForm";
+import { UpdateSelectors, UpdateSelectors2 } from "./UpdateForm";
 
 import './basic.css'
 
@@ -24,6 +24,7 @@ const Home = (props) => {
  return (
   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: '100%' }} >
    <DemoLink link="updateselectors" display="For with updating Selects" />
+   <DemoLink link="updateselectors2" display="variation of updating Selects" />
   </div>
  )
 }
@@ -33,6 +34,7 @@ function App() {
     <div>
       <Router width='100%'  >
         <UpdateSelectors path="/updateselectors" />
+        <UpdateSelectors2 path="/updateselectors2" />
         <NotFound default />
         <Home path="/"/>
       </Router>
