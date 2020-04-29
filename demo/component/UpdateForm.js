@@ -73,6 +73,10 @@ const testData2 = {
   },
 }
 
+
+const formStyle = { padding: '10px', paddingRight: '28px', fontSize: '1.4rem' }
+const submitStyle = { padding: '10px', fontSize: '1.4rem' }
+
 const UpdateSelectors3 = (props) => {
   const datemap = testData2
   const years = R.keys(datemap)
@@ -84,6 +88,8 @@ const UpdateSelectors3 = (props) => {
   return(
      <Form
        submitFormFcn = {formSubmit} defaults={{year: years[0], month, day }}
+       cssStyles = {formStyle}
+       submitStyle = {submitStyle}
      >
        <RegSelector dataget={() => years} varname='year'  />
        <UpdateSelector dataget={getMonths(datemap)} varname='month' changeon={['year']} />

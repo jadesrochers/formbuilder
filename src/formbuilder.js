@@ -118,8 +118,11 @@ const selectFilled = css`
   font-size: 1.0em;
 `;
 
+  /* background-color: #34495e; */
 const optionStyle = css`
-  background-color: #34495e;
+  background-color: #124851;
+  color: #000;
+  background: #124851;
 `;
 
 
@@ -151,7 +154,7 @@ const Selector = (props) => {
      <OptionList
        key={"formoptions"}
        options={options}
-       cssStyles={optionStyle}
+       cssStyles={props.optionStyle ? props.optionStyle : optionStyle}
      />
    </select>
  )
@@ -208,7 +211,7 @@ const NestedSelector = (props) => {
 // value problems
 const Form = (props) => {
   const { values, setname, setValues } = useAddFormValue()
-  const pass = {formset: setname, formvals: values, defaults: props.defaults}
+  const pass = {formset: setname, formvals: values, defaults: props.defaults, cssStyles: props.cssStyles, optionStyle: props.optionStyle}
   const propsToChildren = R.map(child => {
     return React.cloneElement(child, { ...pass, key: child.props.varname})
   })(fps.toArray(props.children))
@@ -225,7 +228,7 @@ const Form = (props) => {
      } }
   >
     { propsToChildren }
-    <input css={[ selectFilled, colorBorder, hoverColor, activeState,(props.cssStyles ? props.cssStyles : undefined)]}
+    <input css={[ selectFilled, colorBorder, hoverColor, activeState,(props.submitStyle ? props.submitStyle : props.cssStyles)]}
      type={"submit"} value={"Submit"}
      key={"submitbutton"}
     />
