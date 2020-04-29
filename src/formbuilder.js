@@ -5,6 +5,7 @@ import * as R from 'ramda';
 import * as fps from '@jadesrochers/fpstreamline';
 
 var handleChange = R.curry((name, childsetter, formsetter, changed) => {
+  /* console.log('handle change: ', changed) */
   const value = changed.target.value;
   childsetter(value)
   formsetter(name, value)
@@ -54,7 +55,7 @@ const useAddFormValue = () => {
     addon[name] = value
     setValues({...values, ...addon})
   }
-  return { values, setname }
+  return { values, setname, setValues }
 }
 
 const backgroundArrow = css`
@@ -117,10 +118,12 @@ const Selector = (props) => {
  return(
    <select 
     value = {props.current} 
+    key = {props.varname}
     onChange = {(chg) => handleChange(props.varname, props.setcurrent, props.formset, chg)}
     css={[selectFilled,backgroundArrow,hoverColor,(props.cssStyles ? props.cssStyles : undefined)]}
     >
      <OptionList
+       key={"formoptions"}
        options={options}
        cssStyles={optionStyle}
      />
@@ -136,28 +139,65 @@ const RegSelector = (props) => {
  useMemo(() => setcurrent(props.defaultval), [props.defaultval])
  return(
 
-   <Selector {...props} opts={opts} setcurrent={setcurrent} current={current} />
+   <Selector {...props}  opts={opts} setcurrent={setcurrent} current={current} />
     )
 }
 
+// UpdateSelector: returns a <form> <select> element.
+// Requires a getter function (dataget) to populate the options list, 
+// the state variable tracking the form values (formvals)
 const UpdateSelector = (props) => {
  const { opts, current, setcurrent } = useUpdateSelector(props.dataget, props.formvals, R.map((name) => props.formvals[name])(props.changeon))
- /* [props.formvals.year, props.formvals.month]) */ 
- useMemo(() => props.formset(props.varname, (opts ? current : undefined)), [opts])
- useMemo(() => setcurrent(props.defaultval), [props.defaultval])
+
+ useMemo(() => { setcurrent(opts ? opts[0] : undefined) }, [opts])
+ useEffect(() => props.formset(props.varname, (opts ? current : undefined)), [opts])
+ // when the options for the selector change, grab the first
+ // and set is as the current
 
  return(
-   <Selector {...props} opts={opts} setcurrent={setcurrent} current={current} />
+   <Selector {...props}  opts={opts} setcurrent={setcurrent} current={current} />
  )
+
 }
 
+// The purpose of the nested selector: 
+// To allow updateselectors to depend on each other in a certain order
+// so that they will always get the correct result
+const NestedSelector = (props) => {
+ const { opts, current, setcurrent } = useUpdateSelector(props.dataget, props.formvals, R.map((name) => props.formvals[name])(props.changeon))
+ /* console.log('NestedSelector current: ', current) */
+ // If options exist, set the current
+ useMemo(() => setcurrent(opts ? opts[0] : undefined), [opts])
+ useEffect(() => props.formset(props.varname, (opts ? current : undefined)), [opts])
+ /* useMemo(() => setcurrent(props.defaultval), [props.defaultval]) */
+ const pass = { formvals: props.formvals, formset: props.formset, update: current }
+ const propsToChildren = R.map(child => {
+    return React.cloneElement(child, { ...pass })
+ })(fps.toArray(props.children))
+
+ return(
+   <>
+     <Selector {...props}  opts={opts} setcurrent={setcurrent} current={current} />
+     { propsToChildren }
+   </>
+ )
+
+}
+
+
+// Need TO DO: have Form set all the defaults itself to avoid unset 
+// value problems
 const Form = (props) => {
-  const { values, setname } = useAddFormValue()
+  const { values, setname, setValues } = useAddFormValue()
   const propsToChildren = R.map(child => {
     return React.cloneElement(child,
     {formset: setname, formvals: values, key: child.props.varname}
     )
   })(fps.toArray(props.children))
+ 
+  if( R.isEmpty(values) ){
+    setValues(props.defaults)
+  }
   
   // The props.submitFcn is usually to get the data back to the parent.
   return(
@@ -169,10 +209,10 @@ const Form = (props) => {
     { propsToChildren }
     <input css={[ selectFilled, colorBorder, hoverColor, activeState,(props.cssStyles ? props.cssStyles : undefined)]}
      type={"submit"} value={"Submit"}
-
+     key={"submitbutton"}
     />
   </form>
   )
 }
 
-export { Form, RegSelector, UpdateSelector, useSelector, useAddFormValue, OptionList }
+export { Form, RegSelector, UpdateSelector, NestedSelector, useSelector, useAddFormValue, OptionList }
