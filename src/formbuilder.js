@@ -135,8 +135,8 @@ const RegSelector = (props) => {
  const { opts, current, setcurrent } = useSelector(props.dataget, props.defaultval) 
  // Changed to useEffect to make React 6.13 happy regarding not updating
  // other components in fucntion body (with props.formset) except in useEffect
- useEffect(() => props.formset(props.varname, (opts ? current : undefined)), [opts])
- useMemo(() => setcurrent(props.defaultval), [props.defaultval])
+ useEffect(() => props.formset(props.varname, (opts ? current : props.formvals[props.varname])), [opts])
+ useMemo(() => setcurrent(props.formvals[props.varname]), [])
  return(
 
    <Selector {...props}  opts={opts} setcurrent={setcurrent} current={current} />
