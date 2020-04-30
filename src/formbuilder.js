@@ -128,7 +128,6 @@ const optionStyle = css`
 
 
 const OptionList = (props) => {
-  console.log('expected keys for options: ', R.map((opt) =>  fps.isTypeof('string')(opt) ? opt : R.toString(opt), fps.toArray(props.options) ) )
   return(
     R.map((opt) => (
       <option 
