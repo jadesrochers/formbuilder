@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { jsx, css } from '@emotion/core'
 import * as R from 'ramda';
 import * as fps from '@jadesrochers/fpstreamline';
@@ -21,18 +21,18 @@ const useSelector = (dataget, defaultval, formset, varname) => {
       datagetter = async () => {
         const data = await dataget()
         setopts(data)
-        formset(varname, data[0])
+        formset(varname, defaultval)
         /* setcurrent(data[0]) */
       }
     }else{
       datagetter = () => {
         setopts(dataget)
-        formset(varname, dataget[0])
+        formset(varname, defaultval)
         /* setcurrent(dataget[0]) */
       }
     }
     datagetter()
-  }, [defaultval])
+  }, [])
 
   return { opts }
 }
@@ -121,7 +121,7 @@ const selectFilled = css`
   /* background-color: #34495e; */
 const optionStyle = css`
   background-color: #124851;
-  color: #000;
+  color: #d8d8d8;
   background: #124851;
 `;
 
@@ -154,8 +154,7 @@ const Selector = (props) => {
      <OptionList
        key={"formoptions"}
        options={options}
-       cssStyles={props.optionStyle ? props.optionStyle : optionStyle}
-     />
+       cssStyles={props.optionStyle ? props.optionStyle : optionStyle}     />
    </select>
  )
 }
