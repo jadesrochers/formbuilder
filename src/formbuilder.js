@@ -55,8 +55,9 @@ const useUpdateSelector = ( props ) => {
         if(rencount === 0){
           props.formset(props.varname, props.default)
           setrencount(1)
-        }else{
+        }else if(rencount === 1){
           props.formset(props.varname, data[0]) 
+          setrencount(2)
         }
         setopts(data)
       }
