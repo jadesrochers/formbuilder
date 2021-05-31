@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import React, { useState, useEffect } from 'react';
-import { jsx, css } from '@emotion/core'
+import { jsx, css } from '@emotion/react'
 import * as R from 'ramda';
 import * as fps from '@jadesrochers/fpstreamline';
 
@@ -161,6 +161,7 @@ const Selector = (props) => {
 }
 
 const RegSelector = (props) => {
+console.log('RegSelector arbgs: ', props)
  const { opts } = useSelector(props.dataget, props.defaults[props.varname], props.formset, props.varname) 
  // Changed to useEffect to make React 6.13 happy regarding not updating
  // other components in fucntion body (with props.formset) except in useEffect
