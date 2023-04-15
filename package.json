@@ -14,9 +14,9 @@
         "LICENSE"
     ],
     "exports": {
-        "default": "./dist/selectbox-umd.js",
         "node": "./dist/selectbox-umd.js",
-        "browser": "./es/index.js"
+        "browser": "./es/index.js",
+        "default": "./dist/selectbox-umd.js"
     },
     "description": "Components to set up selection forms with selector updates",
     "keywords": [
@@ -26,7 +26,8 @@
         "selection"
     ],
     "jest": {
-        "testEnvironment": "jsdom"
+        "testEnvironment": "jsdom",
+	"transformIgnorePatterns": [ "node_modules\/(?!(d3-format))" ]
     },
     "dependencies": {
         "@babel/runtime": "^7.14.0",
@@ -61,8 +62,8 @@
         "@rollup/plugin-commonjs": "^24.0.0",
         "@rollup/plugin-node-resolve": "^15.0.0",
         "@rollup/plugin-terser": "^0.4.0",
-        "@testing-library/jest-dom": "",
-        "@testing-library/react": "",
+        "@testing-library/jest-dom": "^5.16.0",
+        "@testing-library/react": "^14.0.0",
         "babel-jest": "29.5.0",
         "babel-loader": "^9.0.0",
         "css-loader": "^6.0.0",
