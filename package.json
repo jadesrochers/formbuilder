@@ -7,17 +7,19 @@
         "type": "git",
         "url": "https://github.com/jadesrochers/formbuilder.git"
     },
+    "main":  "./dist/formbuilder-umd.js",
+    "exports": {
+        "import": "./es/index.js",
+        "require": "./dist/formbuilder-umd.js",
+        "node": "./dist/formbuilder-umd.js",
+        "default": "./dist/formbuilder-umd.js"
+    },
     "files": [
         "es/",
         "dist/",
         "README.md",
         "LICENSE"
     ],
-    "exports": {
-        "node": "./dist/selectbox-umd.js",
-        "browser": "./es/index.js",
-        "default": "./dist/selectbox-umd.js"
-    },
     "description": "Components to set up selection forms with selector updates",
     "keywords": [
         "react",
