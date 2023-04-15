@@ -1,13 +1,13 @@
 {
     "name": "@jadesrochers/formbuilder",
-    "version": "0.2.17",
+    "version": "0.3.0",
     "license": "MIT",
     "author": "Jared Desrochers",
     "repository": {
         "type": "git",
         "url": "https://github.com/jadesrochers/formbuilder.git"
     },
-    "main":  "./dist/formbuilder-umd.js",
+    "main": "./dist/formbuilder-umd.js",
     "exports": {
         "import": "./es/index.js",
         "require": "./dist/formbuilder-umd.js",
@@ -29,7 +29,9 @@
     ],
     "jest": {
         "testEnvironment": "jsdom",
-	"transformIgnorePatterns": [ "node_modules\/(?!(d3-format))" ]
+        "transformIgnorePatterns": [
+            "node_modules/(?!(d3-format))"
+        ]
     },
     "dependencies": {
         "@babel/runtime": "^7.14.0",
