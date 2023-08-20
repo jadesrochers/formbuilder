@@ -1,5 +1,5 @@
 import React from "react";
-import { UpdateSelectors, UpdateSelectors3 } from "./UpdateForm";
+import { UpdateSelectors, UpdateSelectors3 } from "./UpdateForm.jsx";
 import { BrowserRouter, Route, Routes, Link } from "react-router-dom"
 
 import './basic.css'

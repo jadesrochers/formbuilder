@@ -9,7 +9,7 @@
     },
     "main": "./dist/formbuilder-umd.js",
     "exports": {
-        "import": "./es/index.js",
+        "import": "./es/index.mjs",
         "require": "./dist/formbuilder-umd.js",
         "node": "./dist/formbuilder-umd.js",
         "default": "./dist/formbuilder-umd.js"
@@ -35,7 +35,6 @@
     },
     "dependencies": {
         "@babel/runtime": "^7.14.0",
-        "@emotion/react": "^11.4.0",
         "@jadesrochers/fpstreamline": "^0.1.7",
         "@jadesrochers/reacthelpers": "^0.4.1",
         "ramda": "^0.28.0"
@@ -47,7 +46,7 @@
     "scripts": {
         "test": "BABEL_ENV=jest jest",
         "test-watch": "BABEL_ENV=jest jest --watch",
-        "build-es": "BABEL_ENV=es6 babel --out-dir es --ignore '**/__tests__/','**/enzyme.js'  src",
+        "build-es": "BABEL_ENV=es6 babel --keep-file-extension --out-dir es --ignore '**/__tests__/','**/enzyme.js'  src",
         "build-umd-roll": "BABEL_ENV=umd rollup --config ./rollup.config.mjs",
         "start": "BABEL_ENV=es6 webpack serve --progress --port 3000 --host 127.0.0.1 --config demo/webpack.config.js",
         "packagePatch": "npm run build-es && npm run build-umd-roll && npm version patch && npm publish && git push -u origin master",
@@ -60,8 +59,6 @@
         "@babel/plugin-transform-runtime": "^7.14.3",
         "@babel/preset-env": "^7.14.4",
         "@babel/preset-react": "^7.13.13",
-        "@emotion/babel-plugin": "^11.3.0",
-        "@emotion/jest": "^11.1.0",
         "@rollup/plugin-babel": "^6.0.0",
         "@rollup/plugin-commonjs": "^24.0.0",
         "@rollup/plugin-node-resolve": "^15.0.0",
@@ -70,7 +67,7 @@
         "@testing-library/react": "^14.0.0",
         "babel-jest": "29.5.0",
         "babel-loader": "^9.0.0",
-        "css-loader": "^6.0.0",
+        "css-loader": "^6.8.1",
         "eslint": "^8.0.0",
         "eslint-config-problems": "^7.0.0",
         "eslint-plugin-react": "^7.24.0",

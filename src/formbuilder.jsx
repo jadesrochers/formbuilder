@@ -1,8 +1,7 @@
-/** @jsx jsx */
 import React, { useState, useEffect } from 'react';
-import { jsx, css } from '@emotion/react'
 import * as R from 'ramda';
 import * as fps from '@jadesrochers/fpstreamline';
+import styles from "./formbuilder.module.css"
 
 var handleChange = R.curry((name, formsetter, changed) => {
     const value = changed.target.value;
@@ -85,49 +84,6 @@ const useAddFormValue = () => {
     return { values, setname, setValues }
 }
 
-const backgroundArrow = css`
-  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
-  background-repeat: no-repeat;
-  background-position: center right 0.5em;
-  background-size: 0.7em 0.7em;
-`;
-
-const hoverColor = css`
-  &:hover {
-    color: #f4f6f6;
-  }
-`
-const activeState = css`
-  &:active {
-    transform: translateY(1px);
-    filter: saturate(150%);
-  }
-`
-
-const colorBorder = css`
-  border-left-width: 1px;
-  border-style: solid;
-  border-left-color: #fff;
-`
-
-const selectFilled = css`
-  line-height: 1.1;
-  padding: .4em 1.3em .4em .6em;
-  border: 1px solid #fff;
-  color: #000;
-  appearance: none;
-  background-color: #3498db;
-  font-size: 1.0em;
-`;
-
-/* background-color: #34495e; */
-const optionStyle = css`
-  background-color: #124851;
-  color: #d8d8d8;
-  background: #124851;
-`;
-
-
 
 const OptionList = (props) => {
     return(
@@ -135,7 +91,8 @@ const OptionList = (props) => {
             <option 
             key={fps.isTypeof('string')(opt) ? opt : R.toString(opt)} 
             item={opt}
-            css={[(props.cssStyles ? props.cssStyles : undefined)]}
+            className={props.classnames ? props.classnames.join(' ') : undefined}
+            // css={[(props.cssStyles ? props.cssStyles : undefined)]}
             >
             {opt} 
             </option>
@@ -145,18 +102,24 @@ const OptionList = (props) => {
 
 const Selector = (props) => {
     /* console.log('Selector name and formvals: ', props.formvals, props.varname) */
+    const defaultStyles = `${styles.backgroundArrow} ${styles.selectFilled} ${styles.hoverColor}`
+    const classnames = props.classnames ? `${props.classnames.join(' ')}` : defaultStyles
     const options = props.opts ? props.opts : ''
     return(
         <select 
         value = {props.formvals[props.varname]} 
         key = {props.varname}
         onChange = {(chg) => handleChange(props.varname, props.formset, chg)}
-        css={[selectFilled,backgroundArrow,hoverColor,(props.cssStyles ? props.cssStyles : undefined)]}
+        className={classnames}
+        theme={classnames}
+        // css={[selectFilled,backgroundArrow,hoverColor,(props.cssStyles ? props.cssStyles : undefined)]}
         >
         <OptionList
         key={"formoptions"}
         options={options}
-        cssStyles={props.optionStyle ? props.optionStyle : optionStyle}     />
+        className={props.optionclassnames ? props.optionclassnames.join(' ') : undefined}
+        // cssStyles={props.optionStyle ? props.optionStyle : optionStyle}
+        />
         </select>
     )
 }
@@ -212,10 +175,11 @@ const NestedSelector = (props) => {
 // value problems
 const Form = (props) => {
     const { values, setname, setValues } = useAddFormValue()
-    const pass = {formset: setname, formvals: values, defaults: props.defaults, cssStyles: props.cssStyles, optionStyle: props.optionStyle}
+    const pass = {formset: setname, formvals: values, defaults: props.defaults, classnames: props.classnames, optionclassnames: props.optionclassnames}
     const propsToChildren = R.map(child => {
         return React.cloneElement(child, { ...pass, key: child.props.varname})
     })(fps.toArray(props.children))
+    const defaultStyles = `${styles.selectFilled} ${styles.colorBorder} ${styles.hoverColor} ${styles.activeState}`
 
     if( R.isEmpty(values) ){
         setValues(props.defaults)
@@ -229,7 +193,10 @@ const Form = (props) => {
         } }
         >
         { propsToChildren }
-        <input css={[ selectFilled, colorBorder, hoverColor, activeState,(props.submitStyle ? props.submitStyle : props.cssStyles)]}
+        <input 
+        // css={[ selectFilled, colorBorder, hoverColor, activeState, (props.submitStyle ? props.submitStyle : props.cssStyles)]}
+        className={defaultStyles}
+        theme={props.classnames ? props.classnames.join(' ') : undefined}
         type={"submit"} value={"Submit"}
         key={"submitbutton"}
         />

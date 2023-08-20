@@ -7,7 +7,7 @@ import filesize from 'rollup-plugin-filesize';
 
 export default {
     input: './src/index.js',
-    external: ['react', '@emotion/react', '@jadesrochers/reacthelpers', '@jadesrochers/reacthelpers', 'ramda' ],
+    external: ['react', '@jadesrochers/reacthelpers', '@jadesrochers/reacthelpers', 'ramda' ],
     output: [
       {
           format: 'umd',
