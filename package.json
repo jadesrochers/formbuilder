@@ -52,7 +52,7 @@
     "scripts": {
         "test": "BABEL_ENV=jest jest",
         "test-watch": "BABEL_ENV=jest jest --watch",
-        "build-es": "BABEL_ENV=es6 babel --keep-file-extension --out-dir es --ignore '**/__tests__/','**/enzyme.js'  src",
+        "build-es": "BABEL_ENV=es6 babel --keep-file-extension --out-dir es --ignore '**/__tests__/' src && cp src/*.css es/",
         "build-umd-roll": "BABEL_ENV=umd rollup --config ./rollup.config.mjs",
         "start": "BABEL_ENV=es6 webpack serve --progress --port 3000 --host 127.0.0.1 --config demo/webpack.config.js",
         "packagePatch": "npm run build-es && npm run build-umd-roll && npm version patch && npm publish && git push -u origin master",
@@ -71,6 +71,7 @@
         "@rollup/plugin-terser": "^0.4.0",
         "@testing-library/jest-dom": "^5.16.0",
         "@testing-library/react": "^14.0.0",
+        "autoprefixer": "^10.4.15",
         "babel-jest": "29.5.0",
         "babel-loader": "^9.0.0",
         "css-loader": "^6.8.1",
